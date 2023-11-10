@@ -9,10 +9,6 @@ int pos[51];
 int neg[51];
 bool zero = false;
 
-void cal(){
-	
-}
-
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
@@ -79,9 +75,6 @@ int main(){
 	}
 	
 	cout << total;
-	
-	
-	
 	
 	return 0;
 }

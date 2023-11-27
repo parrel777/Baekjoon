@@ -6,17 +6,16 @@
 using namespace std;
 
 int N, M, X;
-int ans[1001]; //min way
-int time[1001]; //result
-vector<pair<int, int> > d[100001]; // all way
+int ans[2][1001]; //min way
+vector<pair<int, int> > d[2][100001]; // all way
 int longest = 0;
 
-void dijkstra(int start){
-	ans[start] = 0;
+void dijkstra(int k){
+	ans[k][X] = 0;
 	
 	// pq <cost, end>
 	priority_queue<pair<int, int> > pq; // min cost array 
-	pq.push({0, start});
+	pq.push({0, X});
 	
 	while(!pq.empty()){
 		int cost = -pq.top().first;
@@ -24,18 +23,17 @@ void dijkstra(int start){
 		pq.pop();
 		
 		// if now way is more cost, pass it
-		if(ans[end] < cost)
-			continue;
+		if(ans[k][end] < cost) continue;
 			
-		int s = d[end].size();
+		int s = d[k][end].size();
 		
 		for(int i=0; i<s; i++){
-			int next = d[end][i].first;
-			int ncost = d[end][i].second;
+			int next = d[k][end][i].first;
+			int ncost = d[k][end][i].second;
 			
-			if(ans[next] > cost + ncost){
-				ans[next] = cost + ncost;
-				pq.push({-ans[next], next});
+			if(ans[k][next] > cost + ncost){
+				ans[k][next] = cost + ncost;
+				pq.push({-ans[k][next], next});
 			}
 		}
 	}
@@ -52,23 +50,25 @@ int main(){
 		int s, e, c; // start, end, cost
 		cin >> s >> e >> c;
 		
-		d[s].push_back({e, c});
+		// d[0] = X to home (origin way)
+		d[0][s].push_back({e, c});
+		
+		// d[1] = home to X 
+		// (reverse way BUT it actually work like X to home)
+		d[1][e].push_back({s, c});
 	}
-	// go to X
-	for(int i=1; i<=N; i++){ 
-		for(int j=1; j<=N; j++) ans[j] = INF;
-		dijkstra(i);
-		time[i] = ans[X];
-	}
-	// go back
-	for(int j=1; j<=N; j++) ans[j] = INF;
-	dijkstra(X);
 	
-	// add both + find longest
+	for(int j=1; j<=N; j++) ans[0][j] = INF;
+	for(int j=1; j<=N; j++) ans[1][j] = INF;
+	
+	
+	dijkstra(1); // go to X (reverse)
+	dijkstra(0); // back to home (origin)
+	
+	
 	for(int i=1; i<=N; i++){
-		time[i] += ans[i];
-		if(time[i] > longest)
-			longest = time[i];
+		int temp = (ans[0][i] + ans[1][i]);
+		if(temp > longest) longest = temp;
 	}
 	
 	cout << longest;

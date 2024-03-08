@@ -1,60 +1,33 @@
 #include <iostream>
 #include <string>
 #define Mod 1000000
-typedef long long ll;
 using namespace std;
 
-string N;
+string pwd;
 int len;
-bool last_zero = false;
-ll dp[5001];
-ll total = 0;
+int dp[5001]={0,};
 
 int main(){
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 	cout.tie(0);
 	
-	cin >> N;
+	cin >> pwd;
 	
-	len = N.length();
-	dp[0] = 1;
+	len = pwd.length();
+	dp[0] = dp[1] = 1;
 	
-	if(N[len-1]== '0'){
-		dp[1] = 0;
-		last_zero = true;
-	}
-	else{
-		dp[1] = 1;
-	}
+	if(pwd[0]=='0'){
+		cout << 0;
+		return 0;
+	} 
 	
 	for(int i=2; i<=len; i++){
-		int a = N[len-i+1] - '0';
-		int b = N[len-i] - '0';
+		if(pwd[i-1]!='0') dp[i] = dp[i-1] % Mod;
 		
-		if(N[len-i] != '0'){
-			int temp = b * 10 + a;
-			if(temp < 27){
-				dp[i] = (dp[i-1] + dp[i-2]) % Mod;
-			}
-			else{
-				if(last_zero){
-					cout << 0;
-					return 0;
-				}
-				dp[i] = dp[i-1];
-			}
-			last_zero = false;
-		}
-		else{
-			if(last_zero){
-				cout << 0;
-				return 0;
-			}
-			else{
-				last_zero = true;
-			}
-		}
+		int temp = (pwd[i-2]-'0') * 10 + (pwd[i-1]-'0');
+		if(temp>=10 && temp <=26)
+			dp[i] = (dp[i]+dp[i-2]) % Mod;
 	}
 	
 	cout << dp[len];

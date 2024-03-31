@@ -4,6 +4,9 @@
 
 using namespace std;
 
+// Kruskal Algorithm
+// min edge find -> no cycle
+
 int V, E;
 int sum = 0;
 vector<pair<int, pair<int, int> > > tree;

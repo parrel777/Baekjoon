@@ -3,21 +3,25 @@
 
 using namespace std;
 
-int N, K;
-int dp[101][100001] ={0,};
+int N, K, ans = 0;
+int dp[100001] ={0,};
 
 int main(){
 	cin >> N >> K;
 	
-	for(int i=1; i<=N; i++){
+	while(N--){
 		int W, V;
 		cin >> W >> V;
-		for(int j=1; j<=K; j++){
-			dp[i][j] = j < W ? dp[i-1][j] : max(dp[i-1][j-W] + V, dp[i-1][j]);
+		for(int i=K; i>=W; i--){
+			dp[i] = max(dp[i-W] + V, dp[i]);
 		}
 	}
 	
-	cout << dp[N][K];
+	for(int i=0; i<=K; i++){
+		ans = ans < dp[i] ? dp[i] : ans;
+	}
+	
+	cout << ans;
 	
 	return 0;
 }
